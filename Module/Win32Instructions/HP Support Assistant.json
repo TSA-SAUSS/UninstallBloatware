@@ -1,0 +1,14 @@
+{
+    "Name":                             "HP Support Assistant",
+    "Custom":                           true,
+    "CustomPaths":                      [
+        "${env:ProgramFiles(x86)}\\Hewlett-Packard\\HP Support Framework\\UninstallHPSA.exe",
+        "${env:ProgramFiles(x86)}\\HP\\HP Support Framework\\UninstallHPSA.exe"
+    ],
+    "CustomArguments":                  "/s /v/qn UninstallKeepPreferences=FALSE",
+    "DeleteRegistryKey":                "HKLM:\\Software\\WOW6432Node\\Hewlett-Packard\\HPActiveSupport",
+    "SuccessExitCodes":                 [0, 1707, 3010, 1641, 1605],
+    "DeleteUninstallKeyAfterRemove":    true,
+    "MissingPathEqualsMsi":             true,
+    "ForceUninstallWithoutRegistry":    true
+}

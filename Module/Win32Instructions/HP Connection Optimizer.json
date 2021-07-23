@@ -1,0 +1,7 @@
+{
+    "Name":             "HP Connection Optimizer",
+    "InstallShield":    true,
+    "ReplaceGUID":      true,
+    "ReplaceVersion":   true,
+    "ISSTemplate":      "$PSScriptRoot\\ISS-HPConnectionOptimizer.iss"
+}

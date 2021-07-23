@@ -1,0 +1,6 @@
+{
+    "Name":                                     "HP Velocity",
+    "Passthrough":                              true,
+    "MissingPathEqualsPrivateUninstallString":  true,
+    "CustomSuffix":                             "/S"
+}

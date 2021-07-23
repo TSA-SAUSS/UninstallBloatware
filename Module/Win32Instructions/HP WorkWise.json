@@ -1,0 +1,5 @@
+{
+    "Name":                                     "HP WorkWise",
+    "Passthrough":                              true,
+    "CustomSuffix":                             "-silent"
+}
