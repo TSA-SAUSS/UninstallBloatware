@@ -124,7 +124,7 @@ function Remove-BloatwareWin32 {
         'hklm:\software\microsoft\windows\currentversion\uninstall',
         'hklm:\software\wow6432node\microsoft\windows\currentversion\uninstall'
     )
-    $registryEntries = (Get-ChildItem -Path $regPaths | Get-ItemProperty | Where-Object DisplayName -match $Name)
+    $registryEntries = (Get-ChildItem -Path $regPaths | Get-ItemProperty | Where-Object DisplayName -eq $Name)
 
     $forcingUninstall = (($registryEntries.Count -eq 0) -and $ForceUninstallWithoutRegistry)
 
