@@ -15,7 +15,7 @@ function Expand-VariablesInString {
         Specify to restrict the variables that will be searched for.  Do not include the $ in variable names
         when specifying it in VariableNames.
 
-        This function will search for each variable using up to two possible ways it could appear:
+        This function will search for each variable using up to three possible ways it could appear:
             $VariableName
             $($VariableName)
             ${VariableName}
