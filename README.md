@@ -39,7 +39,7 @@ To get started using this module, check out UninstallBloatwareSample.ps1 and cus
 
 First of all, InTune can uninstall in-box Windows applications that will allow those applications to be reprovisioned at a later date without reimaging the device if you change your mind.  For that reason, this module is not recommended for uninstalling in-box apps for organizations with InTune.
 
-UninstallBloatware will run a regex match against package names.  UninstallBloatware will uninstall both Appx and AppX provisioned packages; it makes no difference.
+UninstallBloatware will run a regex match against package names.  UninstallBloatware will uninstall both AppX and AppX provisioned packages; it makes no difference.
 
 To run UninstallBloatware to uninstall AppX packages, you can specify the package name.
 ```powershell
@@ -90,7 +90,7 @@ By default this script creates the file UninstallBloatware.tag in LogDirectory w
 
 ### InstructionVariableNames - Custom set of variable names that can be used in the instruction files
 
-Optionally specify the variables that will be searched for.  Do not include the $ in variable names when specifying it in VariableNames.
+Optionally specify the variables that will be searched for.  Do not include the $ in variable names when specifying them here.
 
 When reading JSON instruction files, Uninstall-Bloatware will search for each variable using up to three possible ways it could appear in the file:
     $VariableName
@@ -132,12 +132,9 @@ Instruction files help specify custom parameters or steps that need to be taken 
 
 Some parameters can be specified for any Win32 application, while some parameters are only available to some types of uninstallers (Passthrough, Installshield, or Custom).
 
-This module supports using environment variables, or really any variable, in your instructions files.  Format these variable names are either ${env:variablename}, $($env:variablename), or $env:variablename.  Note that ${env:ProgramFiles(x86)}, and any other variable name that would normally require braces, can only be specified using the braces notation.  Use $PSScriptRoot in the instructions to refer to the location of the JSON instructions file itself.
+This module supports using environment variables, or really any variable with some exceptions listed above, in your instructions files.  Format these variable names are either ${env:variablename}, $($env:variablename), or $env:variablename.  Note that ${env:ProgramFiles(x86)}, and any other variable name that would normally require braces, can only be specified using the braces notation.  Use $PSScriptRoot in the instructions to refer to the location of the JSON instructions file itself.
 
-To specify a custom list of variables allowed in the instructions files, use the parameter InstructionVariableNames on Uninstall-Bloatware.
-```powershell
-Uninstall-Bloatware -LogDirectory "C:\Temp" -BloatwaresWin32 @('HP Sure Click', 'HP Sure Connect') -InstructionVariableNames @('env:ProgramData', 'myVariableName')
-```
+To specify a custom list of variables allowed in the instructions files see the parameter [InstructionVariableNames](https://github.com/TSA-SAUSS/UninstallBloatware#instructionvariablenames---custom-set-of-variable-names-that-can-be-used-in-the-instruction-files)
 
 ### Common Parameters
 

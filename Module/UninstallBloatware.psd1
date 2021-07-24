@@ -27,7 +27,7 @@
     CompanyName = 'The Salvation Army'
 
     # Copyright statement for this module
-    Copyright = '(c) 2021 The Salvation Army. All rights reserved.'
+    Copyright = 'MIT License, Copyright (c) 2021 The Salvation Army, USA Southern Territory, https://github.com/TSA-SAUSS/UninstallBloatware/blob/main/LICENSE'
 
     # Description of the functionality provided by this module
     Description = 'Uninstalls undesirable applications that are pre-installed '
