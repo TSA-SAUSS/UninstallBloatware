@@ -1,5 +1,5 @@
 function Remove-BloatwareAppxProvisioned {
-    #requires -RunAsAdministrator    
+    #requires -RunAsAdministrator
     [CmdletBinding()]
     param (
         [Parameter(Mandatory, ValueFromPipeline)][string[]]$PackageName
@@ -21,6 +21,6 @@ function Remove-BloatwareAppxProvisioned {
     }
 
     end {
-        
+
     }
 }
