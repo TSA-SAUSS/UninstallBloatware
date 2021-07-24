@@ -31,7 +31,7 @@ Unblock-File .\UninstallBloatware-main.zip
 
 ## Usage - Sample
 
-To get started using this module, check out UninstallBloatwareSample.ps1 and custom it to meet your needs.
+To get started using this module, check out UninstallBloatwareSample.ps1 and customize it to meet your needs.
 
 ## Parameters
 
@@ -161,7 +161,7 @@ Parameters:
 | FalseDoubleEntry | boolean | Some applications have two registry entries.  Specifying this avoids warnings if one of them doesn't work well |
 | CustomSuffix | string | Arguments to be added to the end of the MsiExec uninstall command. |
 
-### Passthroough
+### Passthrough
 
 Use this method if the UninstallString value stored in the application's registry key doesn't contain the ProductGuid but contains the path of the EXE and arguments to uninstall the application.
 

@@ -1,4 +1,26 @@
 function Format-UninstallString {
+    <#
+        .SYNOPSIS
+        Wraps the path of an executable file in quotes.
+
+        .DESCRIPTION
+        Wraps the path of an executable file in quotes.
+
+        .PARAMETER UninstallString
+        A string that could have '.exe' in it.
+
+        .EXAMPLE
+        Format-UninstallString -UninstallString "C:\Program Files\HP\HP Velocity\Uninstall.exe -s -fixyourmessHP"
+
+        .INPUTS
+        String
+
+        .OUTPUTS
+        String
+
+        .NOTES
+        Original Author: Sean Sauve
+    #>
     [CmdletBinding()]
     [OutputType([string])]
     param (
