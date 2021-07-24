@@ -31,13 +31,17 @@ function Test-VariableName {
         $Name
     )
 
-    if($Name.IndexOf("env:") -eq 0) {
-        $testingName = $Name.Substring(4)
-    } else {
-        $testingName = $Name
+    $testingName = $Name
+    if(($null -eq $testingName ) -or ('' -eq $testingName )) {
+        $false
+        return
     }
 
-    if(($null -eq $testingName) -or ('' -eq $testingName)) {
+    if($Name.IndexOf("env:") -eq 0) {
+        $testingName = $Name.Substring(4)
+    }
+
+    if('' -eq $testingName) {
         $false
         return
     }

@@ -23,7 +23,6 @@ function ConvertTo-Hashtable {
         Original Link: https://4sysops.com/archives/convert-json-to-a-powershell-hash-table
         Updated by Sean Sauve
     #>
-
     [CmdletBinding()]
     [OutputType([hashtable])]
     param (
