@@ -19,13 +19,13 @@ This module is being released under an MIT license.  Please consider giving back
 ## Usage - ExecutionPolicy
 
 Your ExecutionPolicy will need to be RemoteSigned or Bypass.
-```
+```powershell
 Set-ExecutionPolicy -ExecutionPolicy 'RemoteSigned'
 ```
 
 In most cases, if your ExecutionPolicy is RemoteSigned you will need to make sure that you unblock these files.  Download the source as a zip file and unblock the entire zip file before extracting it.
 
-```
+```powershell
 Unblock-File .\UninstallBloatware-main.zip
 ```
 
@@ -42,7 +42,7 @@ First of all, InTune can uninstall in-box Windows applications that will allow t
 UninstallBloatware will run a regex match against package names.  UninstallBloatware will uninstall both Appx and AppX provisioned packages; it makes no difference.
 
 To run UninstallBloatware to uninstall AppX packages, you can specify the package name.
-```
+```powershell
 Import-Module .\Module\UninstallBloatware.psm1
 Uninstall-Bloatware -BloatwaresAppx @('HPAudioControl')
 ```
@@ -50,7 +50,7 @@ Uninstall-Bloatware -BloatwaresAppx @('HPAudioControl')
 To remove all AppX by a certain publisher, you can specify their publisher ID.  UninstallBloatware will run a regex match for that publisher.
 
 To uninstall all AppX according to the publisher Id:
-```
+```powershell
 Import-Module .\Module\UninstallBloatware.psm1
 Uninstall-Bloatware -BulkRemoveAllAppxPublishers @('v10z8vjag6ke6', 'CN=ED346674-0FA1-4272-85CE-3187C9C86E26')
 ```
@@ -59,7 +59,7 @@ Uninstall-Bloatware -BulkRemoveAllAppxPublishers @('v10z8vjag6ke6', 'CN=ED346674
 ### BloatwaresWin32 - Uninstall Win32 Applications
 
 To run UninstallBloatware to uninstall Win32 applications:
-```
+```powershell
 Import-Module .\Module\UninstallBloatware.psm1
 Uninstall-Bloatware -LogDirectory "C:\Temp" -BloatwaresWin32 @('HP Sure Click', 'HP Sure Connect')
 ```
@@ -76,7 +76,7 @@ If you do not specify this parameter, no transcript, tag file, or logs will be t
 ### CustomWin32InstructionsDirectory - Where custom instructions are stored
 
 Specify to add a directory to look in when searching for Win32 application uninstall instructions.  Instructions in this directory will override the built-in application instructions.
-```
+```powershell
 Uninstall-Bloatware -LogDirectory "C:\Temp" -BloatwaresWin32 @('HP Sure Click', 'HP Sure Connect') -CustomWin32InstructionsDirectory @('C:\Temp')
 ```
 
@@ -102,19 +102,23 @@ Scope modifiers and namespaces other than Env: are not yet supported.
 Other than those in the Env: namespace, variable names that require ${} are not yet supported.
 
 The default value is:
-    env:ProgramData
-    env:ProgramFiles
-    env:SystemDrive
-    env:ProgramFiles(x86)
-    env:CommonProgramW6432
-    env:CommonProgramFiles(x86)
-    env:DriverData
-    env:CommonProgramFiles
-    env:TEMP
-    env:TMP
-    env:ProgramW6432
-    env:windir
-    PSScriptRoot
+```powershell
+@(
+    'env:ProgramData'
+    'env:ProgramFiles'
+    'env:SystemDrive'
+    'env:ProgramFiles(x86)'
+    'env:CommonProgramW6432'
+    'env:CommonProgramFiles(x86)'
+    'env:DriverData'
+    'env:CommonProgramFiles'
+    'env:TEMP'
+    'env:TMP'
+    'env:ProgramW6432'
+    'env:windir'
+    'PSScriptRoot'
+)
+```
 
 PSScriptRoot will be the directory of the JSON instruction file.
 
@@ -131,7 +135,7 @@ Some parameters can be specified for any Win32 application, while some parameter
 This module supports using environment variables, or really any variable, in your instructions files.  Format these variable names are either ${env:variablename}, $($env:variablename), or $env:variablename.  Note that ${env:ProgramFiles(x86)}, and any other variable name that would normally require braces, can only be specified using the braces notation.  Use $PSScriptRoot in the instructions to refer to the location of the JSON instructions file itself.
 
 To specify a custom list of variables allowed in the instructions files, use the parameter InstructionVariableNames on Uninstall-Bloatware.
-```
+```powershell
 Uninstall-Bloatware -LogDirectory "C:\Temp" -BloatwaresWin32 @('HP Sure Click', 'HP Sure Connect') -InstructionVariableNames @('env:ProgramData', 'myVariableName')
 ```
 
