@@ -94,7 +94,7 @@ Optionally specify the variables that will be searched for.  Do not include the 
 
 When reading JSON instruction files, Uninstall-Bloatware will search for each variable using up to three possible ways it could appear in the file:
     $VariableName
-    $(VariableName)
+    $($VariableName)
     ${VariableName}
 
 Scope modifiers and namespaces other than Env: are not yet supported.
@@ -128,7 +128,7 @@ Instruction files help specify custom parameters or steps that need to be taken 
 
 Some parameters can be specified for any Win32 application, while some parameters are only available to some types of uninstallers (Passthrough, Installshield, or Custom).
 
-This module supports using environment variables, or really any variable, in your instructions files.  Format these variable names are either ${env:variablename}, $(env:variablename), or $env:variablename.  Note that ${env:ProgramFiles(x86)}, and any other variable name that would normally require braces, can only be specified using the braces notation.  Use $PSScriptRoot in the instructions to refer to the location of the JSON instructions file itself.
+This module supports using environment variables, or really any variable, in your instructions files.  Format these variable names are either ${env:variablename}, $($env:variablename), or $env:variablename.  Note that ${env:ProgramFiles(x86)}, and any other variable name that would normally require braces, can only be specified using the braces notation.  Use $PSScriptRoot in the instructions to refer to the location of the JSON instructions file itself.
 
 To specify a custom list of variables allowed in the instructions files, use the parameter InstructionVariableNames on Uninstall-Bloatware.
 ```

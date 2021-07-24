@@ -55,7 +55,7 @@ function Uninstall-Bloatware {
         When reading JSON instruction files, Uninstall-Bloatware will search for each variable using
         up to three possible ways it could appear in the file:
             $VariableName
-            $(VariableName)
+            $($VariableName)
             ${VariableName}
 
         Scope modifiers and namespaces other than Env: are not yet supported.

@@ -15,9 +15,9 @@ function Expand-VariablesInString {
         Specify to restrict the variables that will be searched for.  Do not include the $ in variable names
         when specifying it in VariableNames.
 
-        This function will search for each variable using up to three possible ways it could appear:
+        This function will search for each variable using up to two possible ways it could appear:
             $VariableName
-            $(VariableName)
+            $($VariableName)
             ${VariableName}
 
         Scope modifiers and namespaces other than env: are not yet supported.
@@ -118,50 +118,40 @@ function Expand-VariablesInString {
             '"'     = '\"'
         }
 
-        if($PSBoundParameters.ContainsKey('VariableNames') -and (($null -eq $VariableNames) -or ('' -eq $VariableNames))) {
+        if(($null -eq $VariableNames) -or ('' -eq $VariableNames)) {
             Write-Verbose "Expand-VariablesInString: VariableNames is null or empty"
             return
         }
 
         $variables = @{}
-        if($null -ne $VariableNames) {
-            foreach($variable in $VariableNames) {
-                if($null -eq $variable -or '' -eq $variable) {
-                    Write-Error 'Expand-VariablesInString: null or empty variable name.'
-                }
-                if($variable -like 'env:*') {
-                    $variables[$variable] = [Environment]::GetEnvironmentVariable($variable.Replace('env:',''))
-                }
-                elseif($variable.IndexOf(':') -ne -1) {
-                    Write-Error 'Expand-VariablesInString: scope modifiers and namespaces other than env: are not yet supported.'
-                }
-                elseif(-not (Test-VariableName -Name $variable)) {
-                    Write-Error 'Expand-VariablesInString: variable names (other than env:*) that require ${} are not yet supported.'
-                }
-                elseif(-not (Test-Path -Path "Variable:\$variable")) {
-                    Write-Verbose "Expand-VariablesInString: variable not found"
-                    $variables[$variable] = $null
-                }
-                elseif($variable -eq 'PSScriptRoot') {
-                    if($PSBoundParameters.ContainsKey('PSScriptRootDirectory')) {
-                        Write-Verbose "Expand-VariablesInString: Using PSScriptRootDirectory $PSScriptRootDirectory"
-                        $variables['PSScriptRoot'] = $PSScriptRootDirectory
-                    } else {
-                        Write-Warning "Expand-VariablesInString: PSScriptRootDirectory is not specified"
-                        $variables['PSScriptRoot'] = $null
-                    }
-                }
-                else {
-                    $variables[$variable] = Get-Variable -Name $variable -ValueOnly
+        foreach($variable in $VariableNames) {
+            if($null -eq $variable -or '' -eq $variable) {
+                Write-Error 'Expand-VariablesInString: null or empty variable name.'
+            }
+            if($variable -like 'env:*') {
+                $variables[$variable] = [Environment]::GetEnvironmentVariable($variable.Replace('env:',''))
+            }
+            elseif($variable.IndexOf(':') -ne -1) {
+                Write-Error 'Expand-VariablesInString: scope modifiers and namespaces other than env: are not yet supported.'
+            }
+            elseif(-not (Test-VariableName -Name $variable)) {
+                Write-Error 'Expand-VariablesInString: variable names (other than env:*) that require ${} are not yet supported.'
+            }
+            elseif(-not (Test-Path -Path "Variable:\$variable")) {
+                Write-Verbose "Expand-VariablesInString: variable not found"
+                $variables[$variable] = $null
+            }
+            elseif($variable -eq 'PSScriptRoot') {
+                if($PSBoundParameters.ContainsKey('PSScriptRootDirectory')) {
+                    Write-Verbose "Expand-VariablesInString: Using PSScriptRootDirectory $PSScriptRootDirectory"
+                    $variables['PSScriptRoot'] = $PSScriptRootDirectory
+                } else {
+                    Write-Warning "Expand-VariablesInString: PSScriptRootDirectory is not specified"
+                    $variables['PSScriptRoot'] = $null
                 }
             }
-        }
-        else {
-            foreach($variable in [Environment]::GetEnvironmentVariables().GetEnumerator()) {
-                $variables["env:$($variable.Name)"] = $variable.Value
-            }
-            if($PSBoundParameters.ContainsKey('PSScriptRoot')) {
-                $variables['PSScriptRoot'] = $PSScriptRootDirectory
+            else {
+                $variables[$variable] = Get-Variable -Name $variable -ValueOnly
             }
         }
 
@@ -179,7 +169,7 @@ function Expand-VariablesInString {
             $formatedVariables["`${$variable}"] = $value
             $variableNameDoesntRequireBraces = Test-VariableName -Name $variable
             if($variableNameDoesntRequireBraces) {
-                $formatedVariables["`$($variable)"] = $value
+                $formatedVariables["`$(`$$variable)"] = $value
                 $formatedVariables["`$$variable"] = $value
             }
         }
@@ -189,8 +179,8 @@ function Expand-VariablesInString {
 
     process {
         foreach($singleString in $String) {
-            if($PSBoundParameters.ContainsKey('VariableNames') -and $null -eq $VariableNames -or '' -eq $VariableNames) {
-                Write-Verbose "Expand-VariablesInString: VariableNames is specified but null or empty."
+            if(($null -eq $VariableNames) -or ('' -eq $VariableNames)) {
+                Write-Verbose "Expand-VariablesInString: VariableNames is null or empty"
                 $singleString
                 return
             }
