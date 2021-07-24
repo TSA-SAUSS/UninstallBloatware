@@ -46,7 +46,7 @@ function Expand-VariablesInString {
         semicolon is found in a variable's value that is being expanded, this function will throw an error.
 
         .PARAMETER ToRawJson
-        Formats the values expand by this function to include escapte characters needed for raw JSON data.
+        Formats the values expanded by this function to include escape characters needed for raw JSON data.
 
         .EXAMPLE
         Expand-VariablesInString -String "$ProgramData\Microsoft"
