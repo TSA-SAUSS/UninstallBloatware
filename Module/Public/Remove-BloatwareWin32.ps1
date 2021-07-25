@@ -184,7 +184,7 @@ function Remove-BloatwareWin32 {
         }
         else {
             Write-Host "`tApplication should use a standard uninstall string."
-            $params += @{'WarnOnMissingInstallStringEveryTime' = $warnOnMissingInstallStringEveryTime}
+            $params += @{'WarnOnMissingInstallStringEveryTime' = $true}
         }
 
         Write-Verbose "Remove-BloatwareWin32: using these parameters to pass down:"
