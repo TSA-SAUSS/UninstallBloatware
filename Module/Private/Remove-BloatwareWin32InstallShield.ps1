@@ -45,8 +45,8 @@ function Remove-BloatwareWin32InstallShield {
 
     foreach ($registryEntry in $RegistryEntries) {
         $uninstall = $RegistryEntries.UninstallString
-        if ($null -eq $uninstall) {
-            Write-Warning "`tRegistry entry UninstallString is null"
+        if(($null -eq $uninstall) -or ('' -eq $uninstall)) {
+            Write-Warning "`tRegistry entry UninstallString is null or empty"
             continue
         }
         $uninstall = Format-UninstallString -UninstallString $uninstall
