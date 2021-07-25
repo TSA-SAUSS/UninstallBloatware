@@ -89,6 +89,6 @@ function Remove-BloatwareWin32Passthrough {
     }
 
     if ($uninstallStringCount -eq 0) {
-        Write-Warning "`tNo valid uninstall strings found"
+        Write-Error "`tNo valid uninstall strings found"
     }
 }
