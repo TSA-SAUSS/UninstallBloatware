@@ -92,10 +92,10 @@ By default this script creates the file UninstallBloatware.tag in LogDirectory w
 
 Optionally specify the variables that will be searched for.  Do not include the $ in variable names when specifying them here.
 
-When reading JSON instruction files, Uninstall-Bloatware will search for each variable using up to three possible ways it could appear in the file:
-    $VariableName
-    $($VariableName)
-    ${VariableName}
+When reading JSON instruction files, Uninstall-Bloatware will search for each variable using up to three possible ways it could appear in the file:<br>
+* $VariableName<br>
+* $($VariableName)<br>
+* ${VariableName}<br>
 
 Scope modifiers and namespaces other than Env: are not yet supported.
 
@@ -132,7 +132,7 @@ Instruction files help specify custom parameters or steps that need to be taken 
 
 Some parameters can be specified for any Win32 application, while some parameters are only available to some types of uninstallers (Passthrough, Installshield, or Custom).
 
-This module supports using environment variables, or really any variable with some exceptions listed above, in your instructions files.  Format these variable names are either ${env:variablename}, $($env:variablename), or $env:variablename.  Note that ${env:ProgramFiles(x86)}, and any other variable name that would normally require braces, can only be specified using the braces notation.  Use $PSScriptRoot in the instructions to refer to the location of the JSON instructions file itself.
+This module supports using environment variables, or really any variable with some exceptions listed above, in your instructions files.  The format of  these variable names need to be either ${env:variablename}, $($env:variablename), or $env:variablename.  Note that ${env:ProgramFiles(x86)}, and any other variable name that would normally require braces, can only be specified using the braces notation.  Use $PSScriptRoot in the instructions to refer to the location of the JSON instructions file itself.
 
 To specify a custom list of variables allowed in the instructions files see the parameter [InstructionVariableNames](https://github.com/TSA-SAUSS/UninstallBloatware#instructionvariablenames---custom-set-of-variable-names-that-can-be-used-in-the-instruction-files)
 
