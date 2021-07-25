@@ -49,11 +49,12 @@ function Remove-BloatwareWin32InstallShield {
             Write-Warning "`tRegistry entry UninstallString is null"
             continue
         }
+        $uninstall = Format-UninstallString -UninstallString $uninstall
         if($uninstall.IndexOf(".exe`"") -eq -1) {
             Write-Warning "`tRegistry entry UninstallString ($uninstall) could not be parsed"
             continue
         }
-        $uninstall = Format-UninstallString -UninstallString $uninstall
+
         $issContent = Get-Content $ISSTemplate
         if ($ReplaceGUID) {
             $issContent = $issContent.Replace('$GUID', $registryEntry.ProductGuid)
