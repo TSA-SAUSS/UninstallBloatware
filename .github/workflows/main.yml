@@ -1,0 +1,58 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Run PSScriptAnalyzer
+        uses: microsoft/psscriptanalyzer-action@v1.0
+        #with:
+          # Specifies the path to the scripts or module to be analyzed. Wildcard characters are supported.
+          #path: # default is .\
+          # Uses only the custom rules defined in the specified paths to the analysis. To still use the built-in rules, add the -IncludeDefaultRules switch.
+          #customRulePath: # optional
+          # Adds rules defined in subdirectories of the CustomRulePath location.
+          #recurseCustomRulePath: # optional
+          # Omits the specified rules from the Script Analyzer test. Wildcard characters are supported.
+          #excludeRule: # optional
+          # Invoke default rules along with Custom rules.
+          #includeDefaultRules: # optional
+          # Runs only the specified rules in the Script Analyzer test.
+          #includeRule: # optional
+          # After running Script Analyzer with all rules, this parameter selects rule violations with the specified severity.
+          #severity: # optional
+          # Runs Script Analyzer on the files in the Path directory and all subdirectories recursively.
+          #recurse: # optional
+          # Returns rules that are suppressed, instead of analyzing the files in the path.
+          #suppressedOnly: # optional
+          # Fixes certain warnings which contain a fix in their DiagnosticRecord.
+          #fix: # optional
+          # Exits PowerShell and returns an exit code equal to the number of error records.
+          #enableExit: # optional
+          # File path that contains user profile or hash table for ScriptAnalyzer.
+          #settings: # optional
+          # Specifies where the path for the sarif file
+          #output: # default is results.sarif
+          # Exclude specific files from the sarif results. Uses regex pattern.
+          #ignorePattern: # optional
