@@ -21,4 +21,13 @@ foreach ($PS1File in $PublicPS1Files) {
     . $PSScriptRoot\Public\$($PS1File.split(".")[0])
 }
 
-Export-ModuleMember -Function * -Alias * -Cmdlet *
+$ExportFunctions = @(
+	'Remove-BloatwareAllAppxByPublisher'
+	'Remove-BloatwareAllAppxProvisionedByPublisher'
+	'Remove-BloatwareWin32'
+	'Remove-BloatwareAppx'
+	'Remove-BloatwareAppxProvisioned'
+	'Uninstall-Bloatware'
+)
+
+Export-ModuleMember -Function $ExportFunctions -Alias * -Cmdlet *
