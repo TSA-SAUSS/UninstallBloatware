@@ -33,7 +33,8 @@ function Remove-BloatwareWin32Msi {
     $uninstallStringCount = 0
     foreach ($registryEntry in $RegistryEntries) {
         If ($registryEntry.UninstallString) {
-            $reGuid = '\{?(([0-9a-fA-F]) {8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12})\}?'
+            Write-Verbose "Remove-BloatwareWin32Msi: using UninstallString $($registryEntry.UninstallString)"
+            $reGuid = '\{?(([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12})\}?'
             if ($registryEntry.UninstallString -match $reGuid) {
 
                 $uninstall = "MsiExec.exe /qn /norestart /X{$($matches[1])}"
