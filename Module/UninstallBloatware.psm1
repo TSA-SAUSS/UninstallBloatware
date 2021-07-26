@@ -5,7 +5,7 @@
      Modified on:   2021/07/18
 	 Created by:   	Sean Sauve
 	 Organization: 	TSA-SAUSS
-     Version:       1.1.2
+     Version:       1.1.4
 	===========================================================================
 	.DESCRIPTION
 		Uninstalls undesirable applications that are pre-installed
