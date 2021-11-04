@@ -24,6 +24,10 @@ function Uninstall-Bloatware {
 
         Optional.
 
+        .PARAMETER BulkRemoveAllAppxExcludedApps
+        Specifies apps to avoid removing with the Remove-BloatwareAllAppxByPublisher and
+        Remove-BloatwareAllAppxProvisionedByPublisher functions
+
         .PARAMETER BloatwaresAppx
         Specifies the Appx Provisioned and Appx packages to remove.
 
@@ -113,6 +117,10 @@ function Uninstall-Bloatware {
 
         [Parameter()]
         [ValidateNotNullOrEmpty()]
+        [string[]]$BulkRemoveAllAppxExcludedApps,
+
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
         [string[]]$BloatwaresAppx,
 
         [Parameter()]
@@ -146,8 +154,12 @@ function Uninstall-Bloatware {
 
     if ($PSBoundParameters.ContainsKey('BulkRemoveAllAppxPublishers')) {
         Write-Host "Begin processing all Appx and Appx Provisioned packages by publisher."
-        $errorCount += Remove-BloatwareAllAppxProvisionedByPublisher -PublisherId $BulkRemoveAllAppxPublishers
-        $errorCount += Remove-BloatwareAllAppxByPublisher -Publisher $BulkRemoveAllAppxPublishers
+        $BulkRemoveAllAppxExcludedAppsParam = @{}
+        if ($PSBoundParameters.ContainsKey('BulkRemoveAllAppxExcludedApps')) {
+            $BulkRemoveAllAppxExcludedAppsParam['BulkRemoveAllAppxExcludedApps'] = $BulkRemoveAllAppxExcludedApps
+        }
+        $errorCount += Remove-BloatwareAllAppxProvisionedByPublisher -PublisherId $BulkRemoveAllAppxPublishers @BulkRemoveAllAppxExcludedAppsParam
+        $errorCount += Remove-BloatwareAllAppxByPublisher -Publisher $BulkRemoveAllAppxPublishers @BulkRemoveAllAppxExcludedAppsParam
     }
     else {
         Write-Host "Skipping bulk removal of Appx and Appx Provisioned packages by publisher."
@@ -157,22 +169,12 @@ function Uninstall-Bloatware {
         Write-Host "Checking for Appx or Appx Provisioned package $bloatwareAppx."
         try {
             Remove-BloatwareAppxProvisioned -PackageName $bloatwareAppx
-        }
-        catch {
-            Write-Warning "ERROR when removing application $bloatwareAppx`:"
-            Write-Warning $_.Exception.Message
-            $errorCount += 1
-            continue
-        }
-
-        try {
             Remove-BloatwareAppx -PackageName $bloatwareAppx
         }
         catch {
             Write-Warning "ERROR when removing application $bloatwareAppx`:"
             Write-Warning $_.Exception.Message
             $errorCount += 1
-            continue
         }
     }
 
@@ -200,7 +202,6 @@ function Uninstall-Bloatware {
                 Write-Warning "ERROR when removing application $bloatware`:"
                 Write-Warning $_.Exception.Message
                 $errorCount += 1
-                continue
             }
         }
     }
@@ -209,7 +210,13 @@ function Uninstall-Bloatware {
     }
 
     if ($errorCount -eq 0) {
-        if ((-not $NoTagFile) -and $PSBoundParameters.ContainsKey('LogDirectory')) {
+        if($NoTagFile -eq $true) {
+            Write-Host "NoTagFile parameter is true, not creating a tag file"
+        }
+        elseif(-not ($PSBoundParameters.ContainsKey('LogDirectory'))) {
+            Write-Host "LogDirectory not provided, not creating a tag file"
+        }
+        else {
             Write-Host "Creating a tag file so that Intune knows this was ran successfully."
             Set-Content -Path "$LogDirectory\UninstallBloatware.tag" -Value "Success"
         }

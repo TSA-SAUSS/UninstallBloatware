@@ -66,6 +66,13 @@ function Remove-BloatwareWin32Msi {
         elseif ($warnOnMissingInstallStringEveryTime)  {
                 Write-Warning "`tApplication does not have an uninstall string.  Maybe there are two entries?"
         }
+
+        $newRegistryEntries = $null
+        $newRegistryEntries = (Get-RegistryEntry -Name $Name)
+        if ($newRegistryEntries.Count -eq 0) {
+            Write-Host "$Name no longer installed."
+            return
+        }
     }
     if ($uninstallStringCount -eq 0) {
         Write-Warning "`tNo valid uninstall strings found"

@@ -156,9 +156,9 @@ function Expand-VariablesInString {
         }
 
         $formatedVariables = @{}
-        foreach($variable in $($variables.Keys)){
+        :foreachVariable foreach($variable in $($variables.Keys)){
             if(($null -eq $variables[$variable]) -or ('' -eq $variables[$variable])) {
-                continue
+                continue foreachVariable
             }
             $value = $variables[$variable]
             if($ToRawJson) {

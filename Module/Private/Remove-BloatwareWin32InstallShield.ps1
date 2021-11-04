@@ -43,16 +43,22 @@ function Remove-BloatwareWin32InstallShield {
         $tempDirectory = $PSScriptRoot
     }
 
-    foreach ($registryEntry in $RegistryEntries) {
-        $uninstall = $RegistryEntries.UninstallString
+    if($registryEntries.Count -gt 1) {
+        if(($registryEntries.UninstallString | Select-Object -Unique).Count -eq 1) {
+            $registryEntries | Select-Object -First 1
+        }
+    }
+
+    :foreachRegistryEntry foreach ($registryEntry in $RegistryEntries) {
+        $uninstall = $registryEntry.UninstallString
         if(($null -eq $uninstall) -or ('' -eq $uninstall)) {
             Write-Warning "`tRegistry entry UninstallString is null or empty"
-            continue
+            continue foreachRegistryEntry
         }
         $uninstall = Format-UninstallString -UninstallString $uninstall
         if($uninstall.IndexOf(".exe`"") -eq -1) {
             Write-Warning "`tRegistry entry UninstallString ($uninstall) could not be parsed"
-            continue
+            continue foreachRegistryEntry
         }
 
         $issContent = Get-Content $ISSTemplate
@@ -83,6 +89,13 @@ function Remove-BloatwareWin32InstallShield {
         }
         else {
             Write-Error "Exit code $LastExitCode uninstalling $Name" -ErrorAction 'Stop'
+            return
+        }
+
+        $newRegistryEntries = $null
+        $newRegistryEntries = (Get-RegistryEntry -Name $Name)
+        if ($newRegistryEntries.Count -eq 0) {
+            Write-Host "$Name no longer installed."
             return
         }
     }
