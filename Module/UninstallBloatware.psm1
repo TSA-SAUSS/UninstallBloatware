@@ -2,10 +2,10 @@
 	.NOTES
 	===========================================================================
 	 Created on:   	2021/07/16
-     Modified on:   2021/07/18
+     Modified on:   2021/11/04
 	 Created by:   	Sean Sauve
 	 Organization: 	TSA-SAUSS
-     Version:       1.1.5
+     Version:       1.1.6
 	===========================================================================
 	.DESCRIPTION
 		Uninstalls undesirable applications that are pre-installed
