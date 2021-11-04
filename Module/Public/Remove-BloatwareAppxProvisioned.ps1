@@ -6,7 +6,7 @@ function Remove-BloatwareAppxProvisioned {
     )
 
     begin {
-        $allAppxProvisioned = Get-AppxProvisionedPackage -Online
+        $allAppxProvisioned = Get-AppxProvisionedPackage -Verbose:$false -Online
     }
 
     process {

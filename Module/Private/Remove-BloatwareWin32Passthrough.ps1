@@ -41,7 +41,7 @@ function Remove-BloatwareWin32Passthrough {
 
     $uninstallStringCount = 0
 
-    foreach ($registryEntry in $RegistryEntries) {
+    :foreachRegistryEntry foreach ($registryEntry in $RegistryEntries) {
         $tryPrivateStringNext = $MissingPathEqualsPrivateUninstallString
         if ($UsePrivateUninstallString) {
             $uninstall = $registryEntry.PrivateUninstallString
@@ -56,7 +56,7 @@ function Remove-BloatwareWin32Passthrough {
             }
             else {
                 Write-Warning "`tRegistry entry UninstallString is null or empty"
-                continue
+                continue foreachRegistryEntry
             }
         }
 
@@ -94,6 +94,13 @@ function Remove-BloatwareWin32Passthrough {
                 Write-Error "Exit code $LastExitCode uninstalling $Name" -ErrorAction 'Stop'
                 return
             }
+        }
+
+        $newRegistryEntries = $null
+        $newRegistryEntries = (Get-RegistryEntry -Name $Name)
+        if ($newRegistryEntries.Count -eq 0) {
+            Write-Host "$Name no longer installed."
+            return
         }
     }
 

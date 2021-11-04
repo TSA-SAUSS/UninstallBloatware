@@ -63,7 +63,6 @@ function Remove-BloatwareWin32Custom {
         if (Test-Path $customPathTest) {
             Write-Verbose "Remove-BloatwareWin32Custom: found path $customPathTest"
             $customPath = $customPathTest
-            continue
         }
     }
 

@@ -36,7 +36,7 @@ function Get-BloatwareWin32Instructions {
         }
     }
 
-    $defaultSuccessExitCodes = @(0, 1707, 3010, 1641)
+    $defaultSuccessExitCodes = @(0, 1707, 3010, 1641, 1605)
     if('' -eq $foundName) {
         Write-Verbose "Get-BloatwareWin32Instructions: instructions file for $Name not found.  Using defaults."
         $instructions = @{
