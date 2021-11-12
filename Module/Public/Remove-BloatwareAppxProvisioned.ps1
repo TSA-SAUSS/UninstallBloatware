@@ -14,7 +14,7 @@ function Remove-BloatwareAppxProvisioned {
             $packages = $allAppxProvisioned | Where-Object DisplayName -match $singlePackageName
             foreach($package in $packages) {
                 Write-Host "Removing Appx Provisioned package $singlePackageName"
-                $package | Remove-AppxProvisionedPackage -AllUsers -Online
+                $package | Remove-AppxProvisionedPackage -AllUsers -Online -Verbose:$false
                 Write-Host "`tFinished removing Appx Provisioned package $singlePackageName"
             }
         }
