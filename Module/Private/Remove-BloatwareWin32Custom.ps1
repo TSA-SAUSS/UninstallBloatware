@@ -1,5 +1,9 @@
 function Remove-BloatwareWin32Custom {
-    [CmdletBinding(DefaultParameterSetName = 'Default')]
+    [CmdletBinding(
+        DefaultParameterSetName = 'Default',
+        SupportsShouldProcess,
+        PositionalBinding = $false
+    )]
     param (
         [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
@@ -68,7 +72,7 @@ function Remove-BloatwareWin32Custom {
 
     if ($null -eq $customPath) {
         if ($MissingPathEqualsSuccess) {
-            Write-Warning "CustomPaths not found when uninstalling $Name but MissingPathEqualsSuccess is true."
+            Write-Warning "CustomPaths not found when uninstalling $Name but MissingPathEqualsSuccess is true"
             return
         }
         elseif ($ForcingUninstall) {
@@ -76,7 +80,7 @@ function Remove-BloatwareWin32Custom {
             return
         }
         elseif ($MissingPathEqualsMsi) {
-            Write-Warning "CustomPaths not found when uninstalling $Name, attempting msi."
+            Write-Warning "CustomPaths not found when uninstalling $Name, attempting msi"
             $params = @{'Name' = $Name}
             $params = Add-Hash -FromHashtable $PSBoundParameters -ToHashtable $params -KeyName @(
                 'RegistryEntries'
@@ -89,7 +93,7 @@ function Remove-BloatwareWin32Custom {
             return
         }
         elseif ($MissingPathEqualsPassthrough) {
-            Write-Warning "CustomPaths not found when uninstalling $Name, attempting passthrough."
+            Write-Warning "CustomPaths not found when uninstalling $Name, attempting passthrough"
             $params = @{'Name' = $Name}
             $params = Add-Hash -FromHashtable $PSBoundParameters -ToHashtable $params -KeyName @(
                 'RegistryEntries'
@@ -112,13 +116,14 @@ function Remove-BloatwareWin32Custom {
         $uninstall = "$uninstall $CustomArguments"
     }
     Write-Host "`tUninstalling application with command '$uninstall'"
-    & cmd.exe /c $uninstall | Out-Host
-
-    if ($LastExitCode -in $SuccessExitCodes) {
-        Write-Host "`tExit Code: $LastExitCode"
-        Write-Host "`tFinished uninstalling application $Name"
-    }
-    else {
-        Write-Error "Exit code $LastExitCode uninstalling $Name" -ErrorAction 'Stop'
+    if ($PSCmdlet.ShouldProcess("$Name", 'Uninstall')) {
+        & cmd.exe /c $uninstall | Out-Host
+        if ($LastExitCode -in $SuccessExitCodes) {
+            Write-Host "`tExit Code: $LastExitCode"
+            Write-Host "`tFinished uninstalling application $Name"
+        }
+        else {
+            Write-Error "Exit code $LastExitCode uninstalling $Name" -ErrorAction 'Stop'
+        }
     }
 }

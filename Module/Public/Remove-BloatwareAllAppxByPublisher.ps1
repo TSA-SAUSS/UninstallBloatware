@@ -1,7 +1,10 @@
 function Remove-BloatwareAllAppxByPublisher {
     #requires -RunAsAdministrator
     [OutputType([uint32])]
-    [CmdletBinding()]
+    [CmdletBinding(
+        SupportsShouldProcess,
+        PositionalBinding = $false
+    )]
     param (
         [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
@@ -33,7 +36,9 @@ function Remove-BloatwareAllAppxByPublisher {
             $packageNames = $packages.Name | Sort-Object | Get-Unique -AsString
             foreach($packageName in $packageNames) {
                 try {
-                    Remove-BloatwareAppx -PackageName $packageName -PackageTypeFilter $packageTypeFilter | Out-Null
+                    if ($PSCmdlet.ShouldProcess("$packageName", 'Remove')) {
+                        Remove-BloatwareAppx -PackageName $packageName -PackageTypeFilter $packageTypeFilter | Out-Null
+                    }
                 }
                 catch {
                     Write-Warning "ERROR when removing application $packageName`:"

@@ -1,6 +1,10 @@
 function Remove-BloatwareWin32 {
     #requires -RunAsAdministrator
-    [CmdletBinding(DefaultParameterSetName = 'MSI')]
+    [CmdletBinding(
+        DefaultParameterSetName = 'MSI',
+        SupportsShouldProcess,
+        PositionalBinding = $false
+    )]
     param (
         [Parameter(ParameterSetName = 'MSI', Mandatory)]
         [Parameter(ParameterSetName = 'Passthrough', Mandatory)]
@@ -121,7 +125,7 @@ function Remove-BloatwareWin32 {
     )
 
 
-    $registryEntries = (Get-RegistryEntry -Name $Name)
+    $registryEntries = @(Get-RegistryEntry -Name $Name)
 
     $forcingUninstall = (($registryEntries.Count -eq 0) -and $ForceUninstallWithoutRegistry)
 
@@ -145,7 +149,9 @@ function Remove-BloatwareWin32 {
         foreach($key in $DeleteRegistryKey) {
             if (Test-Path $key) {
                 Write-Host "`tDeleting key: $key"
-                Remove-Item -Path $key -Force -Recurse
+                if ($PSCmdlet.ShouldProcess('Registry Key', 'Remove')) {
+                    Remove-Item -Path $key -Force -Recurse
+                }
             }
             elseif (-not $forcingUninstall) {
                 Write-Host "`tCould not find key specified in arguments: $key"
@@ -231,7 +237,9 @@ function Remove-BloatwareWin32 {
         foreach($regEntry in $registryEntries) {
             if (Test-Path $regEntry.PSPath) {
                 Write-Host "`tDeleting registry key $($regEntry.PSPath)"
-                Remove-Item -Path $regEntry.PSPath -Force -Recurse
+                if ($PSCmdlet.ShouldProcess('Registry Key', 'Remove')) {
+                    Remove-Item -Path $regEntry.PSPath -Force -Recurse
+                }
             }
         }
     }

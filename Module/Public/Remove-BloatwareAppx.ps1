@@ -1,6 +1,9 @@
 function Remove-BloatwareAppx {
     #requires -RunAsAdministrator
-    [CmdletBinding(PositionalBinding = $false)]
+    [CmdletBinding(
+        SupportsShouldProcess,
+        PositionalBinding = $false
+    )]
     param (
         [Parameter(Mandatory, ValueFromPipeline)]
         [ValidateNotNullOrEmpty()]
@@ -30,7 +33,9 @@ function Remove-BloatwareAppx {
                     Where-Object Name -match $singlePackageName
                 foreach($package in $packages) {
                     Write-Host "Removing Appx ($singlePackageTypeFilter) package $singlePackageName"
-                    $package | Remove-AppxPackage -Allusers
+                    if ($PSCmdlet.ShouldProcess("$singlePackageName", 'Remove')) {
+                        $package | Remove-AppxPackage -Allusers
+                    }
                     Write-Host "`tFinished removing Appx ($singlePackageTypeFilter) package $singlePackageName"
                 }
             }

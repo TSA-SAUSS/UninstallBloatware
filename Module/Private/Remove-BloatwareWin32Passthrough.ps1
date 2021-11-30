@@ -1,5 +1,8 @@
 function Remove-BloatwareWin32Passthrough {
-    [CmdletBinding()]
+    [CmdletBinding(
+        SupportsShouldProcess,
+        PositionalBinding = $false
+    )]
     param (
         [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
@@ -66,40 +69,42 @@ function Remove-BloatwareWin32Passthrough {
             $uninstall = $uninstall + " $CustomSuffix"
         }
         Write-Host "`tUninstalling application with uninstall string '$uninstall'"
-        & cmd.exe /c $uninstall | Out-Host
+        if ($PSCmdlet.ShouldProcess("$Name", 'Uninstall')) {
+            & cmd.exe /c $uninstall | Out-Host
 
-        if ($LastExitCode -in $SuccessExitCodes) {
-            Write-Host "`tExit Code: $LastExitCode"
-            Write-Host "`tFinished uninstalling application $Name"
-        }
-        else {
-            if (($LastExitCode -eq 1) -and $tryPrivateStringNext) {
-                Write-Warning "Exit code $LastExitCode uninstalling $Name but MissingPathEqualsPrivateUninstallString is true."
-                $params = @{
-                    'Name'                                    = $Name
-                    'RegistryEntries'                         = $registryEntry
-                    'SuccessExitCodes'                        = $SuccessExitCodes
-                    'CustomSuffix'                            = $CustomSuffix
-                    'MissingPathEqualsSuccess'                = $MissingPathEqualsSuccess
-                    'UsePrivateUninstallString'               = $UsePrivateUninstallString
-                }
-                #Logs not implemented
-                Remove-BloatwareWin32Passthrough @params
-                return
-            }
-            elseif (($LastExitCode -eq 1) -and ($MissingPathEqualsSuccess)) {
-                Write-Warning "Exit code $LastExitCode uninstalling $Name but MissingPathEqualsSuccess is true."
+            if ($LastExitCode -in $SuccessExitCodes) {
+                Write-Host "`tExit Code: $LastExitCode"
+                Write-Host "`tFinished uninstalling application $Name"
             }
             else {
-                Write-Error "Exit code $LastExitCode uninstalling $Name" -ErrorAction 'Stop'
-                return
+                if (($LastExitCode -eq 1) -and $tryPrivateStringNext) {
+                    Write-Warning "Exit code $LastExitCode uninstalling $Name but MissingPathEqualsPrivateUninstallString is true"
+                    $params = @{
+                        'Name'                                    = $Name
+                        'RegistryEntries'                         = $registryEntry
+                        'SuccessExitCodes'                        = $SuccessExitCodes
+                        'CustomSuffix'                            = $CustomSuffix
+                        'MissingPathEqualsSuccess'                = $MissingPathEqualsSuccess
+                        'UsePrivateUninstallString'               = $UsePrivateUninstallString
+                    }
+                    #Logs not implemented
+                    Remove-BloatwareWin32Passthrough @params
+                    return
+                }
+                elseif (($LastExitCode -eq 1) -and ($MissingPathEqualsSuccess)) {
+                    Write-Warning "Exit code $LastExitCode uninstalling $Name but MissingPathEqualsSuccess is true"
+                }
+                else {
+                    Write-Error "Exit code $LastExitCode uninstalling $Name" -ErrorAction 'Stop'
+                    return
+                }
             }
         }
 
         $newRegistryEntries = $null
-        $newRegistryEntries = (Get-RegistryEntry -Name $Name)
+        $newRegistryEntries = @(Get-RegistryEntry -Name $Name)
         if ($newRegistryEntries.Count -eq 0) {
-            Write-Host "$Name no longer installed."
+            Write-Host "$Name no longer installed"
             return
         }
     }

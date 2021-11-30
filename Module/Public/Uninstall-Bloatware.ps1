@@ -105,7 +105,10 @@ function Uninstall-Bloatware {
         .NOTES
         Original Author: Sean Sauve
     #>
-    [CmdletBinding()]
+    [CmdletBinding(
+        SupportsShouldProcess,
+        PositionalBinding = $false
+    )]
     param (
         [Parameter()]
         [ValidateNotNullOrEmpty()]
@@ -143,17 +146,17 @@ function Uninstall-Bloatware {
     )
 
     if ((-not $NoTranscript) -and $PSBoundParameters.ContainsKey('LogDirectory')) {
-        Write-Host "Starting transcript."
+        Write-Host 'Starting transcript'
         if (-not (Test-Path $LogDirectory)) {
-            New-Item -ItemType Directory -Path $LogDirectory -Force | Out-Null
+            New-Item -ItemType Directory -Path $LogDirectory -Force -WhatIf:$false -Confirm:$false | Out-Null
         }
-        Start-Transcript "$LogDirectory\Transcript.log" -Append
+        Start-Transcript "$LogDirectory\Transcript.log" -Append -WhatIf:$false -Confirm:$false
     }
 
     $errorCount = 0
 
     if ($PSBoundParameters.ContainsKey('BulkRemoveAllAppxPublishers')) {
-        Write-Host "Begin processing all Appx and Appx Provisioned packages by publisher."
+        Write-Host 'Begin processing all Appx and Appx Provisioned packages by publisher'
         $BulkRemoveAllAppxExcludedAppsParam = @{}
         if ($PSBoundParameters.ContainsKey('BulkRemoveAllAppxExcludedApps')) {
             $BulkRemoveAllAppxExcludedAppsParam['BulkRemoveAllAppxExcludedApps'] = $BulkRemoveAllAppxExcludedApps
@@ -162,7 +165,7 @@ function Uninstall-Bloatware {
         $errorCount += Remove-BloatwareAllAppxByPublisher -Publisher $BulkRemoveAllAppxPublishers @BulkRemoveAllAppxExcludedAppsParam
     }
     else {
-        Write-Host "Skipping bulk removal of Appx and Appx Provisioned packages by publisher."
+        Write-Host 'Skipping bulk removal of Appx and Appx Provisioned packages by publisher'
     }
 
     foreach($bloatwareAppx in $BloatwaresAppx) {
@@ -192,7 +195,7 @@ function Uninstall-Bloatware {
         $getInstructionsParams['InstructionVariableNames'] = $InstructionVariableNames
     }
     if ($PSBoundParameters.ContainsKey('BloatwaresWin32')) {
-        Write-Host "Begin processing specific Win32 apps."
+        Write-Host 'Begin processing specific Win32 apps'
         foreach($bloatware in $BloatwaresWin32) {
             try {
                 $instructions = Get-BloatwareWin32Instructions -Name $bloatware @getInstructionsParams
@@ -206,27 +209,27 @@ function Uninstall-Bloatware {
         }
     }
     else {
-        Write-Host "Skipping removal of Win32 apps."
+        Write-Host 'Skipping removal of Win32 apps'
     }
 
     if ($errorCount -eq 0) {
         if($NoTagFile -eq $true) {
-            Write-Host "NoTagFile parameter is true, not creating a tag file"
+            Write-Host 'NoTagFile parameter is true, not creating a tag file'
         }
         elseif(-not ($PSBoundParameters.ContainsKey('LogDirectory'))) {
-            Write-Host "LogDirectory not provided, not creating a tag file"
+            Write-Host 'LogDirectory not provided, not creating a tag file'
         }
         else {
-            Write-Host "Creating a tag file so that Intune knows this was ran successfully."
-            Set-Content -Path "$LogDirectory\UninstallBloatware.tag" -Value "Success"
+            Write-Host 'Creating a tag file so that Intune knows this was ran successfully'
+            Set-Content -Path "$LogDirectory\UninstallBloatware.tag" -Value 'Success' -WhatIf:$false -Confirm:$false
         }
     }
     else {
-        Write-Warning "$errorCount errors encountered."
+        Write-Warning "$errorCount errors encountered"
     }
 
     if ((-not $NoTranscript) -and $PSBoundParameters.ContainsKey('LogDirectory')) {
-        Write-Host "Stopping Transcript."
+        Write-Host 'Stopping Transcript'
         Stop-Transcript
     }
 }

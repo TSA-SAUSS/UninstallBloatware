@@ -1,7 +1,10 @@
 function Remove-BloatwareAllAppxProvisionedByPublisher {
     #requires -RunAsAdministrator
     [OutputType([uint32])]
-    [CmdletBinding()]
+    [CmdletBinding(
+        SupportsShouldProcess,
+        PositionalBinding = $false
+    )]
     param (
         [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
@@ -16,7 +19,7 @@ function Remove-BloatwareAllAppxProvisionedByPublisher {
     foreach($singlePublisherId in $PublisherId) {
         $packages = Get-AppxProvisionedPackage -Online -Verbose:$false | Where-Object PublisherId -eq $singlePublisherId
         if ($PSBoundParameters.ContainsKey('BulkRemoveAllAppxExcludedApps')) {
-            $packages = $packages | Where-Object Name -NotIn $BulkRemoveAllAppxExcludedApps
+            $packages = $packages | Where-Object DisplayName -NotIn $BulkRemoveAllAppxExcludedApps
             Write-Host "$($packages.Count) unexcluded Appx Provisioned packages found by publisher $singlePublisherId"
         }
         else {
@@ -25,7 +28,9 @@ function Remove-BloatwareAllAppxProvisionedByPublisher {
         $packageNames = $packages.DisplayName | Sort-Object | Get-Unique -AsString
         foreach($packageName in $packageNames) {
             try {
-                Remove-BloatwareAppxProvisioned -PackageName $packageName | Out-Null
+                if ($PSCmdlet.ShouldProcess("$packageName", 'Remove')) {
+                    Remove-BloatwareAppxProvisioned -PackageName $packageName | Out-Null
+                }
             }
             catch {
                 Write-Warning "ERROR when removing application $packageName`:"

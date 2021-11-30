@@ -1,5 +1,8 @@
 function Remove-BloatwareWin32Msi {
-    [CmdletBinding()]
+    [CmdletBinding(
+        SupportsShouldProcess,
+        PositionalBinding = $false
+    )]
     param (
         [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
@@ -48,15 +51,17 @@ function Remove-BloatwareWin32Msi {
 
                 $uninstallStringCount += 1
                 Write-Host "`tUninstalling application with uninstall string '$uninstall'"
-                & cmd.exe /c $uninstall | Out-Host
+                if ($PSCmdlet.ShouldProcess("$Name", 'Uninstall')) {
+                    & cmd.exe /c $uninstall | Out-Host
 
-                if ($LastExitCode -in $SuccessExitCodes) {
-                    Write-Host "`tExit Code: $LastExitCode"
-                    Write-Host "`tFinished uninstalling application $Name"
-                }
-                else {
-                    Write-Error "Exit code $LastExitCode uninstalling $Name" -ErrorAction 'Stop'
-                    return
+                    if ($LastExitCode -in $SuccessExitCodes) {
+                        Write-Host "`tExit Code: $LastExitCode"
+                        Write-Host "`tFinished uninstalling application $Name"
+                    }
+                    else {
+                        Write-Error "Exit code $LastExitCode uninstalling $Name" -ErrorAction 'Stop'
+                        return
+                    }
                 }
             }
             elseif ($WarnOnMissingInstallStringEveryTime) {
@@ -68,9 +73,9 @@ function Remove-BloatwareWin32Msi {
         }
 
         $newRegistryEntries = $null
-        $newRegistryEntries = (Get-RegistryEntry -Name $Name)
+        $newRegistryEntries = @(Get-RegistryEntry -Name $Name)
         if ($newRegistryEntries.Count -eq 0) {
-            Write-Host "$Name no longer installed."
+            Write-Host "$Name no longer installed"
             return
         }
     }
