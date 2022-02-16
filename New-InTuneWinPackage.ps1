@@ -1,6 +1,6 @@
 Function New-InTuneWinPackage {
     param (
-        [Parameter(Mandatory=0,Position=0)]
+        [Parameter(Mandatory, Position = 0)]
         [string]
         $AppSubfolderName
     )
