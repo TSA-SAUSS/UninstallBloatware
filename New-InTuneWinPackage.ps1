@@ -1,8 +1,7 @@
 Function New-InTuneWinPackage {
+    [CmdletBinding()]
     param (
-        [Parameter(Mandatory, Position = 0)]
-        [string]
-        $AppSubfolderName
+        [string]$AppSubfolderName
     )
 
     try {
@@ -18,10 +17,17 @@ Function New-InTuneWinPackage {
     }
 
     Write-Host "------Making intunewin file------"
-    $appFolder = "$PSScriptRoot\$AppSubfolderName"
+    if ($PSBoundParameters.ContainsKey('AppSubfolderName')) {
+        $appFolder = "$PSScriptRoot\$AppSubfolderName"
+    }
+    else {
+        $appFolder = "$PSScriptRoot"
+    }
     IntuneAppBuilder pack --source $appFolder\Content --output $appFolder\Output
 
     Write-Host ""
     Write-Host "Review the JSON file 'Content.intunewin.json'."
     Write-Host "When ready upload 'Content.portal.intunewin' to the InTune portal"
 }
+
+New-InTuneWinPackage
