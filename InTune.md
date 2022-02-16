@@ -31,7 +31,7 @@ The file C:\ProgramData\UninstallBloatware\UninstallBloatware.tag will be added 
 | Publisher       | The Salvation Army                                                                                                          |
 | App Version     | 1.1.7                                                                                                                       |
 | Category        | Computer Management                                                                                                         |
-| Information URL | https://github.com/TSA-SAUSS/InTuneApps/blob/master/Win32/UninstallBloatware/README.md                                      |
+| Information URL | https://github.com/TSA-SAUSS/UninstallBloatware/blob/main/README.md                                      |
 
 ## Program
 
