@@ -33,6 +33,10 @@ Unblock-File .\UninstallBloatware-main.zip
 
 To get started using this module, check out UninstallBloatwareSample.ps1 and customize it to meet your needs.
 
+## Usage - InTune
+
+To use this module with InTune, see the instructions here: https://github.com/TSA-SAUSS/UninstallBloatware/blob/main/InTune.md
+
 ## Parameters
 
 ### BloatwaresAppx - Uninstall Appx Packages by Name
